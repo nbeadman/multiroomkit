@@ -1,0 +1,18 @@
+{
+  "name": "multiroomkit-diary",
+  "version": "0.1.0",
+  "private": true,
+  "description": "The MultiroomKit developer diary, published with GitHub Pages.",
+  "scripts": {
+    "dev": "eleventy --serve --port=8088",
+    "build": "node scripts/clean-output.mjs && eleventy",
+    "check": "node scripts/check-build.mjs"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "packageManager": "pnpm@11.25.0",
+  "devDependencies": {
+    "@11ty/eleventy": "3.1.6"
+  }
+}

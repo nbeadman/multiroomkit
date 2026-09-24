@@ -1,0 +1,24 @@
+---
+layout: base.njk
+title: The project
+permalink: /about/index.html
+description: MultiroomKit is a planned open-source Swift toolkit for Sonos control, Apple platform experiences, a command-line tool, and an MCP server.
+---
+<article class="article wrap">
+  <header class="article-header"><p class="eyebrow">The project <span>/</span> Foundations</p><h1>MultiroomKit</h1><p class="article-summary">An open-source Swift project for exploring better ways to control music around the house.</p></header>
+  <div class="prose">
+    <h2>Why build it?</h2>
+    <p>I have a Sonos system, and I want to understand what a well-designed toolkit for controlling it could look like. The project is also a chance to make my engineering process visible: architecture, debugging, tests, documentation, and the judgment behind each choice.</p>
+    <p>I’m a senior iOS developer. I want this work to show how I build and reason about software, including how I use AI assistance.</p>
+    <h2>The intended shape</h2>
+    <ul><li><strong>A Swift library</strong> that models rooms, speakers, groups, and playback.</li><li><strong>Native Apple experiences</strong> built on shared capabilities, with platform constraints made explicit.</li><li><strong>A command-line tool</strong> for repeatable, scriptable control.</li><li><strong>An MCP server</strong> that gives AI agents access to those same capabilities.</li></ul>
+    <p>These are project goals. The implementation and platform support have not yet been established.</p>
+    <h2>The first questions</h2>
+    <p>How much can be done reliably on the local network? Where does the supported Sonos cloud API make sense? What can be shared across Apple platforms, and what needs a different approach? The first implementation should answer a small, testable part of those questions.</p>
+    <h2>Working with AI</h2>
+    <p>Codex will help with research, implementation, and review. The diary will identify that assistance and record the evidence behind the decisions. Claims about reliability and platform support should follow testing.</p>
+    <h2>Where things stand</h2>
+    <p>Earlier conversations explored naming, existing projects, local UPnP control, and the official Sonos APIs. The diary is the first deliverable. Next comes a scoped experiment and a recorded decision about the first control path.</p>
+    <p><a href="{{ '/journal/starting-with-the-record/' | url }}">Read the first entry →</a></p>
+  </div>
+</article>

@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% if title %}{{ title }} · {% endif %}{{ site.title }}</title>
+  <meta name="description" content="{{ description or site.description }}">
+  <meta name="theme-color" content="#142128">
+  <meta property="og:title" content="{{ title or site.title }}">
+  <meta property="og:description" content="{{ description or site.description }}">
+  <meta property="og:type" content="{% if entryNumber %}article{% else %}website{% endif %}">
+  {% if site.url %}<link rel="canonical" href="{{ site.url }}{{ page.url | url }}">{% endif %}
+  <link rel="icon" type="image/svg+xml" href="{{ '/assets/favicon.svg' | url }}">
+  <link rel="stylesheet" href="{{ '/assets/style.css' | url }}">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header wrap">
+    <a class="wordmark" href="{{ '/' | url }}" aria-label="MultiroomKit home"><span class="mark" aria-hidden="true">m<span>k</span></span>MultiroomKit</a>
+    <nav aria-label="Main navigation">
+      <a href="{{ '/' | url }}"{% if page.url == '/' or entryNumber %} aria-current="page"{% endif %}>Journal</a>
+      <a href="{{ '/about/' | url }}"{% if page.url == '/about/' %} aria-current="page"{% endif %}>The project</a>
+      {% if site.repository %}<a href="{{ site.repository }}">GitHub <span aria-hidden="true">↗</span></a>{% endif %}
+    </nav>
+  </header>
+  <main id="main">{{ content | safe }}</main>
+  <footer class="site-footer wrap">
+    <div><strong>MultiroomKit</strong><p>An independent project by {{ site.author }}.</p></div>
+    <p>Built with Swift in mind.<br>Documented as it happens.</p>
+    <p class="disclaimer">Not affiliated with or endorsed by Sonos.<br>Sonos is a trademark of Sonos, Inc.</p>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,58 @@
+name: Build and publish diary
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Determine Pages paths
+        shell: bash
+        env:
+          REPOSITORY: ${{ github.repository }}
+          OWNER: ${{ github.repository_owner }}
+        run: |
+          REPO_NAME="${REPOSITORY#*/}"
+          PREFIX="/$REPO_NAME/"
+          if [[ "${REPO_NAME,,}" == "${OWNER,,}.github.io" ]]; then PREFIX="/"; fi
+          echo "SITE_PATH_PREFIX=$PREFIX" >> "$GITHUB_ENV"
+          echo "SITE_URL=https://${OWNER,,}.github.io" >> "$GITHUB_ENV"
+          echo "SITE_REPOSITORY=https://github.com/$REPOSITORY" >> "$GITHUB_ENV"
+      - run: pnpm build
+      - run: pnpm check
+      - uses: actions/upload-pages-artifact@v4
+        if: github.event_name != 'pull_request'
+        with:
+          path: _site
+  deploy:
+    if: github.event_name != 'pull_request'
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
