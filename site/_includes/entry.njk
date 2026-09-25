@@ -2,7 +2,7 @@
 layout: base.njk
 ---
 <article class="article wrap">
-  <a class="back-link" href="{{ '/' | url }}">← All entries</a>
+  <a class="back-link" href="/">← All entries</a>
   <header class="article-header">
     <p class="eyebrow">Entry {{ entryNumber }} <span>/</span> {{ category }}</p>
     <h1>{{ title }}</h1>
@@ -10,6 +10,6 @@ layout: base.njk
     <p class="byline">{{ site.author }} <span>·</span> <time datetime="{{ date | isoDate }}">{{ date | displayDate }}</time></p>
   </header>
   <div class="prose">{{ content | safe }}</div>
-  <aside class="article-note"><strong>About this diary</strong><p>AI assistance is part of the work. Entries record the decisions, evidence, and remaining uncertainty alongside the implementation.</p></aside>
-  <a class="back-link" href="{{ '/' | url }}">← Back to the journal</a>
+  <aside class="article-note">{% renderFile "./site/_includes/content/diary-note.md" %}</aside>
+  <a class="back-link" href="/">← Back to the journal</a>
 </article>

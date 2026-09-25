@@ -1,4 +1,7 @@
-module.exports = function (eleventyConfig) {
+module.exports = async function (eleventyConfig) {
+  const { RenderPlugin, EleventyHtmlBasePlugin } = await import("@11ty/eleventy");
+  eleventyConfig.addPlugin(RenderPlugin);
+  eleventyConfig.addPlugin(EleventyHtmlBasePlugin);
   eleventyConfig.addPassthroughCopy({ "site/assets": "assets" });
   eleventyConfig.addFilter("displayDate", (value) =>
     new Intl.DateTimeFormat("en", {
@@ -15,7 +18,9 @@ module.exports = function (eleventyConfig) {
     api
       .getFilteredByGlob("site/journal/*.md")
       .filter((entry) => !entry.data.draft)
-      .sort((a, b) => b.date - a.date),
+      .sort(
+        (a, b) => b.date - a.date || Number(b.data.entryNumber) - Number(a.data.entryNumber),
+      ),
   );
   return {
     dir: {

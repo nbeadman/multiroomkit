@@ -153,6 +153,11 @@ h1 {
   max-width: 590px;
   margin-bottom: 0;
 }
+.intro-detail > :last-child,
+.project-description > :last-child,
+.principles-copy > :last-child {
+  margin-bottom: 0;
+}
 .project-note {
   background: var(--ink);
   color: #fff;
@@ -188,7 +193,7 @@ h1 {
   letter-spacing: -0.03em;
   margin-bottom: 17px;
 }
-.project-note > p:not(.note-label) {
+.project-description {
   color: #d2dce1;
   font-size: 15px;
   line-height: 1.65;
@@ -304,7 +309,7 @@ h1 {
   letter-spacing: -0.035em;
   margin: 0;
 }
-.principles > p {
+.principles-copy {
   color: var(--muted);
   margin: 27px 0 0;
   max-width: 500px;
@@ -526,7 +531,7 @@ h1 {
     padding: 24px;
     max-width: none;
   }
-  .project-note h2 br {
+  .project-note h2 .responsive-break {
     display: none;
   }
   .project-note h2 {
@@ -569,10 +574,10 @@ h1 {
     gap: 20px;
     padding-block: 38px 42px;
   }
-  .principles > p {
+  .principles-copy {
     margin: 0;
   }
-  .principles h2 br {
+  .principles h2 .responsive-break {
     display: none;
   }
   .site-footer {

@@ -51,14 +51,31 @@ SITE_PATH_PREFIX=/multiroomkit/ pnpm build
 SITE_PATH_PREFIX=/multiroomkit/ pnpm check
 ```
 
-The build check validates local links/assets, base paths, page titles, headings, and template rendering. It runs in the deployment workflow.
+The build check validates local links/assets, base paths, page titles, headings, and template rendering. It also builds isolated fixtures at both URL prefixes to test Markdown fields, ordinary links, draft exclusion, and same-day entry ordering. It runs in the deployment workflow.
+
+## Edit page content
+
+Edit writing in Markdown, not in the layout templates:
+
+- `site/index.md`: homepage introduction plus short front-matter fields for headings, project status, and section labels. The `project.body` and `principles.body` fields are Markdown blocks; preserve their YAML indentation.
+- `site/about.md`: project-page metadata and ordinary Markdown prose.
+- `site/404.md`: not-found page wording.
+- `site/_includes/content/*.md`: shared footer and diary-note prose. These fragments have no front matter and do not become standalone pages.
+
+Front matter is the YAML between the opening `---` lines. Short title/label fields are plain text. Headline lists control the designed line breaks; HTML and CSS stay in the templates. Write longer prose in the Markdown body or designated Markdown blocks. Use headings starting at `##` in page bodies because the layout supplies the page's `h1`.
+
+Use ordinary site-root Markdown links such as `[The project](/about/)` and `[First entry](/journal/starting-with-the-record/)`. Do not add `/multiroomkit/` yourself: Eleventy's HTML Base plugin adds the deployment prefix to local links and assets. Full external URLs and fragment links are left alone. Markdown is not processed as Nunjucks, so it does not need template expressions or the `url` filter.
+
+Journal entries sort newest date first, then highest entry number first for entries on the same day. Continue using unique, numeric entry numbers and `draft: true` until an entry is ready for review and publication.
 
 ## Main files
 
-- `site/index.njk`: journal homepage and current-stage note.
-- `site/about.njk`: project brief.
+- `site/index.md`: journal homepage and current-stage content.
+- `site/about.md`: project brief.
+- `site/404.md`: not-found content.
 - `site/journal/`: Markdown entries.
-- `site/_includes/`: shared page and entry layouts.
+- `site/_includes/*.njk`: presentation layouts, including the automatic journal list.
+- `site/_includes/content/`: shared Markdown fragments.
 - `site/assets/style.css`: responsive styling.
 - `site/_data/site.js`: site identity and deployment metadata.
 - `.github/workflows/pages.yml`: build, checks, and publication.
