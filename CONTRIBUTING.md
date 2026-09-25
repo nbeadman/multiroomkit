@@ -35,9 +35,11 @@ Use the official Codex GitHub integration. Connecting the GitHub plugin to a loc
 
 ### One-time account setup
 
-1. Connect `nbeadman/multiroomkit` in [Codex cloud](https://chatgpt.com/codex).
-2. Enable the repository in [Codex code review settings](https://chatgpt.com/codex/settings/code-review).
-3. For editing tasks, ensure a cloud environment for this repository is available and can run the validation commands above. Use the Node and pnpm versions in `package.json`; do not add secrets for this public static site.
+1. Create an environment for `nbeadman/multiroomkit` in [Codex cloud environments](https://chatgpt.com/codex/cloud/settings/environments). This is the setup link supplied by the Codex GitHub bot when the environment is missing.
+2. In Codex cloud settings, enable Code review for this repository if it is not already enabled.
+3. Ensure the environment can run the validation commands above. Use the Node and pnpm versions in `package.json`; do not add secrets for this public static site.
+
+The older code-review settings URL in the official guide redirected to the ChatGPT homepage during initial setup. Prefer the bot-provided environment link above; if it also redirects, finish account setup through the signed-in Codex interface before expecting comment-driven tasks to work.
 
 Automatic reviews are optional. This workflow uses explicit mentions so Nick chooses when to request another pass.
 

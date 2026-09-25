@@ -21,4 +21,4 @@ Record the actual results and any checks not run:
 
 Describe what Codex helped with, what was independently checked, and any open questions.
 
-Leave the PR open for Nick's review and manual merge. Request Codex with an explicit PR comment when ready; see [CONTRIBUTING.md](../CONTRIBUTING.md).
+Leave the PR open for Nick's review and manual merge. Request Codex with an explicit PR comment when ready; see [CONTRIBUTING.md](https://github.com/nbeadman/multiroomkit/blob/main/CONTRIBUTING.md).
