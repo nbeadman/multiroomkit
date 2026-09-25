@@ -30,3 +30,7 @@ layout: base.njk
   <div><p class="eyebrow">{{ principles.label }}</p><h2 id="principles-title">{% for line in principles.heading %}{{ line }}{% if not loop.last %}<br class="responsive-break"> {% endif %}{% endfor %}</h2></div>
   <div class="principles-copy">{{ principles.body | renderContent("md") | safe }}</div>
 </section>
+<section class="principles human-notes wrap" aria-labelledby="notes-title">
+  <div><h2 id="notes-title">{{ notes.heading }}</h2><p class="notes-subtitle">{{ notes.subtitle }}</p></div>
+  <div class="principles-copy">{% renderFile "./site/_includes/content/nicks-notes.md" %}</div>
+</section>

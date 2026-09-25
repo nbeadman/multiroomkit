@@ -50,6 +50,16 @@ Fixture entry.
       const html = await readFile(path.join(fixture, "_site/index.html"), "utf8");
       assert.ok(html.includes("<strong>Homepage fixture.</strong>"));
       assert.ok(html.includes("<strong>Status fixture.</strong>"));
+      assert.ok(html.includes("<strong>OpenAI Codex</strong>"));
+      assert.ok(html.includes("with prompting by <strong>Nick Beadman</strong>"));
+      assert.ok(html.includes("Human authored, not AI"));
+      const notes = html.match(/<section class="principles human-notes wrap"[\s\S]*?<\/section>/)?.[0];
+      assert.ok(notes, "Human-authored notes must have their own section");
+      assert.ok(notes.includes('href="https://openai.com/codex/"'));
+      assert.ok(notes.includes('href="https://www.linkedin.com/in/nbeadman/"'));
+      assert.ok(!html.includes("That's what this journal is for."));
+      assert.ok(html.includes(">A reviewable, Markdown-driven diary<"));
+      assert.ok(!html.includes("/journal/content-without-the-layout/"));
       assert.ok(html.includes(`href="${prefix}about/?from=card#details"`));
       assert.ok(html.includes(`href="${prefix}about/"`));
       assert.ok(html.includes(`src="${prefix}assets/favicon.svg"`));

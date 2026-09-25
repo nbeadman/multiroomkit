@@ -314,6 +314,16 @@ h1 {
   margin: 27px 0 0;
   max-width: 500px;
 }
+.human-notes {
+  border-top: 1px solid var(--line);
+}
+.human-notes .principles-copy {
+  margin-top: 0;
+}
+.notes-subtitle {
+  color: var(--muted);
+  margin: 12px 0 0;
+}
 .site-footer {
   border-top: 1px solid var(--line);
   display: grid;

@@ -1,7 +1,7 @@
 ---
 layout: home.njk
 permalink: /index.html
-description: Building MultiroomKit in public. A Swift developer's journal of Sonos control, Apple platforms, and engineering with AI.
+description: Building MultiroomKit in public. Written by OpenAI Codex with prompting by Nick Beadman, except for the human-authored Nick's Notes.
 eyebrow: The developer diary
 since: Since September 2026
 headline:
@@ -28,6 +28,9 @@ principles:
     - The reasoning is
     - part of the project.
   body: |
-    The useful story is how a decision held up: what I asked AI to help with, what needed changing, and how I checked the result. That's what this journal is for.
+    The useful story is how a decision held up: what Nick asked Codex to help with, what needed changing, and how the result was checked.
+notes:
+  heading: Nick's Notes
+  subtitle: Human authored, not AI
 ---
-A record of the choices, experiments, and course corrections along the way. Written by Nick Beadman, with Codex in the development process.
+A record of the choices, experiments, and course corrections along the way. Everything here is written by **OpenAI Codex**, with prompting by **Nick Beadman**, except for the explicitly human-authored **Nick's Notes** below.

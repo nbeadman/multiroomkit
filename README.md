@@ -61,6 +61,7 @@ Edit writing in Markdown, not in the layout templates:
 - `site/about.md`: project-page metadata and ordinary Markdown prose.
 - `site/404.md`: not-found page wording.
 - `site/_includes/content/*.md`: shared footer and diary-note prose. These fragments have no front matter and do not become standalone pages.
+- `site/_includes/content/nicks-notes.md`: Nick's human-authored homepage notes. Preserve his supplied wording; do not rewrite these as AI-authored copy. The heading and subtitle are in `site/index.md`.
 
 Front matter is the YAML between the opening `---` lines. Short title/label fields are plain text. Headline lists control the designed line breaks; HTML and CSS stay in the templates. Write longer prose in the Markdown body or designated Markdown blocks. Use headings starting at `##` in page bodies because the layout supplies the page's `h1`.
 
