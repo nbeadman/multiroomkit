@@ -13,18 +13,21 @@ pnpm dev
 
 Open http://localhost:8088. The rendered output is `_site/` and is not committed.
 
+## Contributing
+
+Make changes on descriptive `codex/` branches and submit pull requests into `main`. Do not commit or push directly to `main`. Use PR comments for discussion and explicit Codex requests, then leave the final merge to Nick.
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for branch rules, validation, and the Codex PR-comment setup. [AGENTS.md](AGENTS.md) contains the repository's agent instructions and review rules.
+
 ## Publish on GitHub Pages
 
-The intended repository is `nbeadman/multiroomkit` and the intended public site is https://nbeadman.github.io/multiroomkit/. A project repository keeps your account-level portfolio URL free for later.
+The repository is `nbeadman/multiroomkit` and the public site is https://nbeadman.github.io/multiroomkit/. A project repository keeps your account-level portfolio URL free for later.
 
-1. Create a public repository named `multiroomkit` under `nbeadman`.
-2. Push these source files to its `main` branch.
-3. In **Settings → Pages → Build and deployment**, select **GitHub Actions**.
-4. If the first deployment ran before Pages was enabled, rerun **Build and publish diary** from the Actions tab.
+Publishing is already configured under **Settings → Pages → Build and deployment → GitHub Actions**. To publish an update, merge its reviewed PR into `main`. To retry a deployment, rerun **Build and publish diary** on `main` from the Actions tab.
 
 The workflow derives the site prefix and GitHub link from the actual repository. A repository named `multiroomkit` publishes at `https://YOUR-USERNAME.github.io/multiroomkit/`. An account-level `YOUR-USERNAME.github.io` repository is also supported. Custom domains require updating the URL configuration in the workflow.
 
-Pull requests build and check the site without publishing. Pushes to `main` deploy automatically after those checks pass. No personal access token is stored in the repository.
+Pull requests build and check the site without publishing. Merges into `main` deploy automatically after those checks pass. Manual runs on other branches cannot publish. No personal access token is stored in the repository.
 
 ## Write an entry
 
