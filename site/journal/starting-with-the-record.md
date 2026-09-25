@@ -5,6 +5,8 @@ date: 2026-09-24
 entryNumber: "01"
 category: Foundations
 draft: false
+nicksNotes: |
+  GPT-6 Astra High used. Required a usage reset but deemed necessary as it is essentially the initial commit. Codex committed directly to `main` which is what caused the pull-request changes.
 ---
 The first deliverable for MultiroomKit is this diary.
 

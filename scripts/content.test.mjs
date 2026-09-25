@@ -71,6 +71,21 @@ Fixture entry.
       await assert.rejects(readFile(path.join(fixture, "_site/journal/draft-fixture/index.html")), { code: "ENOENT" });
       assert.ok(html.includes(">Fixture 91<") && html.includes(">Fixture 90<"));
       assert.ok(html.indexOf(">Fixture 91<") < html.indexOf(">Fixture 90<"));
+      for (const [slug, phrase] of [
+        ["starting-with-the-record", "Required a usage reset but deemed necessary"],
+        ["review-before-publishing", "this method is simular to how I work with other engineers"],
+      ]) {
+        const entry = await readFile(path.join(fixture, `_site/journal/${slug}/index.html`), "utf8");
+        const panel = entry.match(/<section class="entry-human-notes"[\s\S]*?<\/section>/)?.[0];
+        assert.ok(panel, `${slug}: missing human notes`);
+        assert.ok(panel.includes(phrase));
+        assert.ok(panel.includes("Human authored, not AI"));
+        assert.ok(panel.includes("<code>main</code>"));
+        assert.ok(entry.indexOf('<div class="prose">') < entry.indexOf(panel));
+        assert.ok(entry.indexOf(panel) < entry.indexOf('<aside class="article-note">'));
+      }
+      const entryWithoutNotes = await readFile(path.join(fixture, "_site/journal/a-earlier-fixture/index.html"), "utf8");
+      assert.ok(!entryWithoutNotes.includes('class="entry-human-notes"'));
       const about = await readFile(path.join(fixture, "_site/about/index.html"), "utf8");
       assert.ok(about.includes("<h2>Why build it?</h2>"));
       assert.ok(about.includes(`href="${prefix}journal/starting-with-the-record/"`));

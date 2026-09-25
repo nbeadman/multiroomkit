@@ -441,6 +441,28 @@ h1 {
   margin: 28px 0;
   color: var(--muted);
 }
+.entry-human-notes {
+  border-left: 4px solid var(--accent);
+  background: #fff8df;
+  padding: 24px 27px;
+  margin-block: 42px 30px;
+}
+.entry-human-notes h2 {
+  font-size: 24px;
+  line-height: 1.25;
+  letter-spacing: -0.03em;
+  margin: 0;
+}
+.entry-human-notes .notes-subtitle {
+  margin: 8px 0 20px;
+  font-size: 14px;
+}
+.entry-human-notes .prose {
+  font-size: 16px;
+}
+.entry-human-notes .prose > :last-child {
+  margin-bottom: 0;
+}
 .article-note {
   border-top: 2px solid var(--ink);
   background: #eaf0f3;
@@ -613,6 +635,7 @@ h1 {
   .article-header {
     margin-bottom: 28px;
   }
+  .entry-human-notes,
   .article-note {
     padding: 20px;
   }

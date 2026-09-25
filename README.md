@@ -35,6 +35,8 @@ Copy `templates/entry.md` to `site/journal/a-short-descriptive-slug.md`. Set the
 
 Use filenames without date prefixes: the filename becomes the permalink, while the front matter controls chronology. Keep entry numbers unique. The homepage automatically lists entries newest first.
 
+Each entry supports a human-authored `nicksNotes: |` Markdown block in its front matter. Indent the supplied text by two spaces. It renders in a gold-accented “Nick's Notes” panel labeled “Human authored, not AI,” between the main article and “About this diary.” Preserve Nick's wording exactly; agents must not invent notes. Blank or omitted notes do not render an empty panel.
+
 Capture objectives, selected AI assistance, outcomes, verification, decisions, and lessons. Avoid presenting untested plans as shipped features. Summarize technical evidence before publishing; do not commit access tokens, household identifiers, serial numbers, or private device/network details.
 
 ## Check a build
