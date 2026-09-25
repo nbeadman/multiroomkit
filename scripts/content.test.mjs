@@ -72,8 +72,8 @@ Fixture entry.
       assert.ok(html.includes(">Fixture 91<") && html.includes(">Fixture 90<"));
       assert.ok(html.indexOf(">Fixture 91<") < html.indexOf(">Fixture 90<"));
       for (const [slug, phrase] of [
-        ["starting-with-the-record", "Required a usage reset but deemed necessary"],
-        ["review-before-publishing", "this method is simular to how I work with other engineers"],
+        ["starting-with-the-record", "A usage reset was required, but I deemed it necessary"],
+        ["review-before-publishing", "this method is similar to how I work with other engineers"],
       ]) {
         const entry = await readFile(path.join(fixture, `_site/journal/${slug}/index.html`), "utf8");
         const panel = entry.match(/<section class="entry-human-notes"[\s\S]*?<\/section>/)?.[0];
