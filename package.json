@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "eleventy --serve --port=8088",
     "build": "node scripts/clean-output.mjs && eleventy",
-    "check": "node scripts/check-build.mjs"
+    "check": "node scripts/check-build.mjs && node --test scripts/content.test.mjs"
   },
   "engines": {
     "node": ">=22"

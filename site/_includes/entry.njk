@@ -2,14 +2,21 @@
 layout: base.njk
 ---
 <article class="article wrap">
-  <a class="back-link" href="{{ '/' | url }}">← All entries</a>
+  <a class="back-link" href="/">← All entries</a>
   <header class="article-header">
     <p class="eyebrow">Entry {{ entryNumber }} <span>/</span> {{ category }}</p>
     <h1>{{ title }}</h1>
     <p class="article-summary">{{ description }}</p>
-    <p class="byline">{{ site.author }} <span>·</span> <time datetime="{{ date | isoDate }}">{{ date | displayDate }}</time></p>
+    <p class="byline">Written by {{ author }} <span>·</span> Prompted by {{ site.author }} <span>·</span> <time datetime="{{ date | isoDate }}">{{ date | displayDate }}</time></p>
   </header>
   <div class="prose">{{ content | safe }}</div>
-  <aside class="article-note"><strong>About this diary</strong><p>AI assistance is part of the work. Entries record the decisions, evidence, and remaining uncertainty alongside the implementation.</p></aside>
-  <a class="back-link" href="{{ '/' | url }}">← Back to the journal</a>
+  {% if nicksNotes and (nicksNotes | trim) %}
+  <section class="entry-human-notes" aria-labelledby="entry-notes-title">
+    <h2 id="entry-notes-title">Nick's Notes</h2>
+    <p class="notes-subtitle">Human authored, not AI</p>
+    <div class="prose">{{ nicksNotes | renderContent("md") | safe }}</div>
+  </section>
+  {% endif %}
+  <aside class="article-note">{% renderFile "./site/_includes/content/diary-note.md" %}</aside>
+  <a class="back-link" href="/">← Back to the journal</a>
 </article>

@@ -5,6 +5,8 @@ date: 2026-09-24
 entryNumber: "02"
 category: Experiment
 draft: true
+# Add only notes supplied by Nick; leave blank until he provides them.
+nicksNotes: ""
 ---
 
 ## Objective
