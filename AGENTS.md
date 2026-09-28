@@ -12,8 +12,8 @@
 
 ## Validation
 
-- Use the Node and pnpm versions specified in `package.json`.
-- Run `pnpm install --frozen-lockfile`, `pnpm build`, and `pnpm check`.
+- Use the Node and pnpm versions specified in `diary/package.json`.
+- Run `pnpm install --frozen-lockfile`, `pnpm build`, and `pnpm check` from `diary/`.
 - Also build and check with `SITE_PATH_PREFIX=/multiroomkit/` to verify GitHub Pages project URLs.
 - For visual changes, inspect the rendered page at mobile and desktop sizes.
 - Never claim a test or deployment succeeded without observing the result.
@@ -23,3 +23,9 @@
 - PRs and non-main branches must not deploy the public diary. Deployment must be restricted to `main`; PR builds are validation only.
 - Do not publish credentials, private conversation transcripts, household identifiers, serial numbers, or private device/network details. Use redacted examples.
 - Public writing must distinguish project goals and proposed platform support from implemented, tested capabilities. Describe AI assistance honestly without presenting untested output as verified work.
+
+## Terminology and human notes
+
+- Call local Sonos support UPnP, including SSDP discovery and SOAP queries. Call the cloud path the Sonos Control API.
+- Proofread every Nick's Notes section for spelling and grammar while preserving Nick's meaning and voice. Never invent human-authored notes.
+- Keep credentials in macOS Keychain or other explicit local secret storage, never in source, fixtures, command arguments, logs, or public writing. Inspect staged changes before every commit; ignore rules alone are not a security check.

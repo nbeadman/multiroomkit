@@ -16,6 +16,7 @@ Do not force-push over review history or bypass branch protection as a workaroun
 ## Required validation
 
 ```sh
+cd diary
 pnpm install --frozen-lockfile
 pnpm build
 pnpm check
@@ -37,7 +38,7 @@ Use the official Codex GitHub integration. Connecting the GitHub plugin to a loc
 
 1. Create an environment for `nbeadman/multiroomkit` in [Codex cloud environments](https://chatgpt.com/codex/cloud/settings/environments). This is the setup link supplied by the Codex GitHub bot when the environment is missing.
 2. In Codex cloud settings, enable Code review for this repository if it is not already enabled.
-3. Ensure the environment can run the validation commands above. Use the Node and pnpm versions in `package.json`; do not add secrets for this public static site.
+3. Ensure the environment can run the validation commands above. Use the Node and pnpm versions in `diary/package.json`; do not add secrets for this public static site.
 
 The older code-review settings URL in the official guide redirected to the ChatGPT homepage during initial setup. Prefer the bot-provided environment link above; if it also redirects, finish account setup through the signed-in Codex interface before expecting comment-driven tasks to work.
 

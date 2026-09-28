@@ -4,3 +4,11 @@ _site/
 .env
 .env.*
 !.env.example
+.build/
+.swiftpm/
+*.xcuserstate
+xcuserdata/
+.local/
+*.p12
+*.p8
+*.key

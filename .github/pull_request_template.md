@@ -10,7 +10,7 @@ What does this change accomplish, and why?
 ## Verification
 
 - [ ] Branch is a descriptive `codex/` branch; no direct commits to `main`.
-- [ ] `pnpm build` and `pnpm check` passed.
+- [ ] `pnpm build` and `pnpm check` passed from `diary/`.
 - [ ] Build and check passed with `SITE_PATH_PREFIX=/multiroomkit/`.
 - [ ] Visual changes were checked at mobile and desktop sizes, or are not applicable.
 - [ ] No credentials, private transcripts, or private device/network identifiers are included.
