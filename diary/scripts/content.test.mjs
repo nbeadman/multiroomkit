@@ -59,6 +59,11 @@ Fixture entry.
       assert.ok(notes.includes('href="https://www.linkedin.com/in/nbeadman/"'));
       assert.ok(!html.includes("That's what this journal is for."));
       assert.ok(html.includes(">A reviewable, Markdown-driven diary<"));
+      assert.ok(html.includes(">Making room for code<"));
+      const layoutEntry = await readFile(path.join(fixture, "_site/journal/making-room-for-code/index.html"), "utf8");
+      assert.ok(layoutEntry.includes("Used GPT-6 Astra Light."));
+      assert.ok(layoutEntry.includes('class="entry-human-notes"'));
+      assert.ok(layoutEntry.includes('href="https://github.com/nbeadman/multiroomkit/pull/3"'));
       assert.ok(!html.includes("/journal/content-without-the-layout/"));
       assert.ok(html.includes(`href="${prefix}about/?from=card#details"`));
       assert.ok(html.includes(`href="${prefix}about/"`));
