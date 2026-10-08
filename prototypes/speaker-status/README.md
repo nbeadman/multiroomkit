@@ -45,35 +45,41 @@ and does not support IPv6-only systems or unusual port configurations.
 Sonos calls UPnP unsupported. Read-only describes the actions sent, not a
 guarantee that future firmware will preserve this interface.
 
-## Sonos Control API: account setup required
+## Sonos Control API: interactive authorization
 
-Live cloud verification is pending: authorized integration credentials have not
-been configured for the prototype. Synthetic tests are not evidence of live
-cloud success.
+Live cloud verification is pending. Synthetic OAuth and cloud tests are not
+evidence of a successful authorization or a live speaker query.
 
 1. Create a developer account through the [Sonos developer portal](https://developer.sonos.com/).
-2. Register a control integration and obtain its API key and client secret.
-3. Follow [Sonos authorization](https://docs.sonos.com/docs/authorize). The
-   documented flow requires a publicly routable HTTPS redirect URL, user consent,
-   and a server-side code exchange using the client secret. Arrange that securely
-   before authorizing; the diary is not an OAuth callback service.
-4. Once an access token is available, enter the token and API key in a **local
-   interactive terminal**, with input hidden, using the command below.
+2. Register a **control** integration and its redirect URI exactly as
+   `https://nbeadman.github.io/multiroomkit/sonos/callback/`. Keep the generated
+   API key and client secret private.
+3. In your own interactive macOS Terminal, run `cloud-status`. It prompts with
+   echo disabled for the API key and client secret. Do not put them in the
+   command, an environment variable, a file in this repository, or a Codex
+   tool call.
+4. Open the printed Sonos login URL in your browser and approve access to your
+   household. The callback page shows a short-lived authorization code and
+   state. Enter both into the still-running terminal when prompted. The tool
+   checks the state, exchanges the code with Sonos over HTTPS using the client
+   secret, then performs the read-only status query in the same run.
 
 ```sh
-swift run --package-path prototypes/speaker-status cloud-status --set-credentials
 swift run --package-path prototypes/speaker-status cloud-status
+swift run --package-path prototypes/speaker-status cloud-status --summary
 swift run --package-path prototypes/speaker-status cloud-status --json
 swift run --package-path prototypes/speaker-status cloud-status --list-households
 swift run --package-path prototypes/speaker-status cloud-status --household HOUSEHOLD_ID
 ```
 
-Credentials are generic-password items in macOS Keychain, service
-`org.multiroomkit.prototype.speaker-status`, accounts `access-token` and `api-key`.
-You can remove those items using Keychain Access. The tool never asks for or
-stores the client secret, Sonos password, or refresh token. It does not yet
-implement OAuth login or automatic token refresh; replace expired access tokens
-with `--set-credentials`. Do not embed a client secret in a released binary.
+The API key, secret, authorization code, access token, and returned refresh
+token are not saved to Keychain or disk; the refresh token is ignored. Each
+invocation repeats authorization and uses its access token for that run only.
+There is no automatic token refresh. The old `--set-credentials` option is
+removed. If an earlier version saved credentials under Keychain service
+`org.multiroomkit.prototype.speaker-status`, this version does not read or
+delete them; remove those items yourself in Keychain Access if no longer needed.
+Do not embed a client secret in a released binary.
 
 Sonos documents the broad `playback-control-all` OAuth scope, even though these
 tools only query state. The cloud implementation uses GET requests for
@@ -88,13 +94,18 @@ are private and must not be copied into GitHub.
 
 ## Secrets and test data
 
-- Never pass tokens/secrets as command arguments or paste them into chat, GitHub,
-  the diary, fixtures, or shell history.
+- Never pass keys, secrets, codes, or tokens as command arguments or paste them
+  into chat, GitHub, the diary, fixtures, or shell history. Terminal prompts
+  suppress echo; the printed login URL contains the integration key, so keep
+  terminal scrollback private too.
 - Normal and JSON output contain private room names and listening information.
   Keep them local. `--summary` omits identifying names but its counts and states
   remain private; do not copy live summaries into GitHub without explicit approval.
-- No media URLs, device IDs, addresses, OAuth responses, or raw server errors are
-  printed by the status commands. No responses are saved to disk.
+- No media URLs, device IDs, addresses, token responses, or raw server errors
+  are printed by the status commands. The user-facing login URL is printed,
+  and the callback displays the one-time code and state locally. GitHub Pages
+  still receives the initial callback URL containing the code; this is a
+  personal prototype, not production-grade OAuth hosting.
 - Tests use invented fixtures and an injected HTTP function. They do not access
   the LAN, Sonos cloud, or Keychain. CI needs no secrets.
 - Review staged changes for private data before committing. Never commit raw

@@ -1,6 +1,6 @@
 # Experiment: read-only speaker status
 
-Date: 2026-09-28. Implementation and this report were written by OpenAI Codex
+Started: 2026-09-28. Updated: 2026-10-08. Implementation and this report were written by OpenAI Codex
 from Nick's requirements. No human-authored notes have been invented.
 
 ## Question
@@ -16,7 +16,9 @@ from the future public SDK until live results establish useful boundaries.
 - UPnP SSDP discovery on eligible LAN interfaces, topology including bonded
   members/satellites, and coordinator-based status and metadata reads.
 - Cloud household selection, logical players and device counts, playback state,
-  and playback metadata queries. Credentials come from macOS Keychain.
+  and playback metadata queries. A later change added an interactive OAuth
+  code exchange: key, secret, state, and code are entered through hidden
+  terminal prompts and held only for one run, without Keychain storage.
 - Bounded network requests, partial-result reporting, synthetic tests, no state
   changes, no third-party package dependencies, and no secrets in CI.
 
@@ -31,9 +33,10 @@ from the future public SDK until live results establish useful boundaries.
 - The normal display was shown to Nick privately for comparison. Household
   counts, playback states, metadata availability, room names, and media details
   are intentionally not reproduced here.
-- Live cloud verification is **not performed**: authorized integration
-  credentials are not configured for the prototype yet. Mock responses only verify our
-  request construction, parsing, grouping, and failure handling.
+- Live cloud verification is **not performed**. Synthetic responses verify
+  authorization URL construction, state matching, token exchange requests,
+  response parsing, grouping, and failure handling, but not Sonos acceptance
+  or live speaker status.
 - No tokens, room names, media titles, household/device IDs, or network addresses
   are included in this report or committed fixtures. No playback or security
   configuration changes were made.
@@ -48,10 +51,12 @@ Sonos protections. Normal terminal/CI instructions retain standard SwiftPM use.
 - Compare displayed rooms and current titles against the official Sonos app.
 - Exercise paused media, radio, TV/line-in, unreachable coordinators, and topology
   changes on real hardware. These are not all established by one successful run.
-- Set up Sonos developer access and a secure OAuth callback/code-exchange flow;
-  obtain a token locally, then compare cloud and UPnP snapshots of the same system.
-- Test Keychain entry/retrieval with real user-authorized credentials. OAuth login
-  and refresh are explicitly not implemented by this first status tool.
+- Exercise the published HTTPS callback and local code exchange with a real,
+  user-authorized Sonos login, then compare cloud and UPnP snapshots of the
+  same system. Keep all resulting data private.
+- The prototype does not retain tokens or implement refresh. Each invocation
+  repeats the OAuth flow; assess a secure persistent design only after the
+  one-session flow has been verified.
 - UPnP rows are physical topology members; cloud rows are logical players with
   reported device counts. Do not infer an error merely from different row counts.
 - Snapshots are sequential observations, not atomic views. Sources may omit

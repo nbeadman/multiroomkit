@@ -10,23 +10,30 @@ import Darwin
                 print("""
                 cloud-status [--json | --summary] [--household ID]
                 cloud-status --list-households
-                cloud-status --set-credentials
-                Read-only Sonos Control API status. Requires a registered Sonos integration
-                and an OAuth access token. Credentials are read from macOS Keychain.
-                --set-credentials prompts securely; never pass credentials as arguments.
+                Read-only Sonos Control API status. Each run prompts in a local terminal
+                for your integration API key and client secret, then guides you through
+                Sonos login and a one-time authorization-code exchange.
+                Input is hidden and held only for this run; no Keychain or file storage.
+                Never pass credentials or the returned code as command arguments.
                 --list-households prints private household IDs for explicit selection.
-                This prototype does not implement OAuth login or automatic token refresh.
+                No automatic token refresh: authorize again on the next run.
                 Default/JSON output contains personal room names and listening information.
                 Exit: 0 complete, 1 failed, 2 partial. No playback or configuration changes.
                 """)
                 return
             }
-            if options.setCredentials {
-                try CredentialStore.promptAndSave()
-                print("Credentials saved in macOS Keychain.")
-                return
-            }
-            let client = CloudClient(credentials: try CredentialStore.load())
+            let apiKey = try TerminalInput.hidden("Sonos integration API key (hidden): ")
+            let secret = try TerminalInput.hidden("Sonos client secret (hidden): ")
+            let oauth = try SonosOAuth(apiKey: apiKey, clientSecret: secret)
+            let expectedState = try SonosOAuth.randomState()
+            let loginURL = try oauth.authorizationURL(state: expectedState)
+            print("Open this Sonos authorization URL in a browser. Do not share it:")
+            print(loginURL.absoluteString)
+            print("After Sonos redirects to the MultiroomKit callback, copy its state and code into this terminal.")
+            let returnedState = try TerminalInput.hidden("Returned state (hidden): ")
+            let code = try TerminalInput.hidden("Authorization code (hidden): ")
+            let client = CloudClient(credentials: try await oauth.exchange(
+                code: code, returnedState: returnedState, expectedState: expectedState))
             if options.listHouseholds {
                 for id in try await client.householdIDs() { print(terminalSafe(id)) }
                 return

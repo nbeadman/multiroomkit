@@ -94,7 +94,6 @@ public struct Options: Sendable {
     public var host: String?
     public var interface: String?
     public var household: String?
-    public var setCredentials = false
     public var listHouseholds = false
     public init(_ arguments: [String], cloud: Bool) throws {
         var index = 0
@@ -104,7 +103,6 @@ public struct Options: Sendable {
             case "--help", "-h": help = true
             case "--json": json = true
             case "--summary": summary = true
-            case "--set-credentials" where cloud: setCredentials = true
             case "--list-households" where cloud: listHouseholds = true
             case "--timeout" where !cloud, "--host" where !cloud, "--interface" where !cloud, "--household" where cloud:
                 index += 1
@@ -123,9 +121,6 @@ public struct Options: Sendable {
             index += 1
         }
         guard !(json && summary) else { throw StatusError("Choose --json or --summary, not both.") }
-        guard !setCredentials || arguments.count == 1 else {
-            throw StatusError("Use --set-credentials on its own.")
-        }
         guard !listHouseholds || arguments.count == 1 else {
             throw StatusError("Use --list-households on its own.")
         }

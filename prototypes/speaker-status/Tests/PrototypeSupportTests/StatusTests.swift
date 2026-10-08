@@ -8,6 +8,8 @@ final class StatusTests: XCTestCase {
         XCTAssertThrowsError(try Options(["--timeout", "nan"], cloud: false))
         XCTAssertThrowsError(try Options(["--timeout", "0"], cloud: false))
         XCTAssertThrowsError(try Options(["--token", "DO_NOT_ECHO"], cloud: true))
+        XCTAssertThrowsError(try Options(["--client-secret", "DO_NOT_ECHO"], cloud: true))
+        XCTAssertThrowsError(try Options(["--set-credentials"], cloud: true))
         XCTAssertThrowsError(try Options(["--json", "--summary"], cloud: false))
         XCTAssertThrowsError(try Options(["--host", "10.0.0.1"], cloud: true))
         XCTAssertEqual(try Options(["--timeout", "2"], cloud: false).timeout, 2)
@@ -104,6 +106,68 @@ final class StatusTests: XCTestCase {
         XCTAssertEqual(requests.count, 4)
         XCTAssertTrue(requests.allSatisfy { $0.httpMethod == "GET" && $0.url?.host == "api.ws.sonos.com" })
         XCTAssertTrue(requests.allSatisfy { $0.value(forHTTPHeaderField: "Authorization") == "Bearer synthetic-test-token" })
+    }
+
+    func testOAuthAuthorizationURLAndSecureState() throws {
+        let oauth = try SonosOAuth(apiKey: "synthetic-key", clientSecret: "synthetic-secret")
+        let state = try SonosOAuth.randomState()
+        XCTAssertEqual(state.count, 43)
+        XCTAssertNotEqual(state, try SonosOAuth.randomState())
+        let url = try oauth.authorizationURL(state: state)
+        XCTAssertEqual(url.host, "api.sonos.com")
+        XCTAssertEqual(url.path, "/login/v3/oauth")
+        let parameters = Dictionary(uniqueKeysWithValues: URLComponents(url: url, resolvingAgainstBaseURL: false)!.queryItems!.map { ($0.name, $0.value!) })
+        XCTAssertEqual(parameters["client_id"], "synthetic-key")
+        XCTAssertEqual(parameters["response_type"], "code")
+        XCTAssertEqual(parameters["state"], state)
+        XCTAssertEqual(parameters["scope"], "playback-control-all")
+        XCTAssertEqual(parameters["redirect_uri"], SonosOAuth.redirectURI)
+        XCTAssertTrue(url.absoluteString.contains("redirect_uri=https%3A%2F%2Fnbeadman.github.io%2Fmultiroomkit%2Fsonos%2Fcallback%2F"))
+        XCTAssertThrowsError(try oauth.authorizationURL(state: "bad state"))
+        XCTAssertThrowsError(try SonosOAuth(apiKey: "synthetic", clientSecret: "bad\nsecret"))
+        XCTAssertThrowsError(try SonosOAuth(apiKey: "bad:key", clientSecret: "synthetic"))
+    }
+
+    func testOAuthExchangesOnlyAfterStateMatches() async throws {
+        let recorder = Requests()
+        let oauth = try SonosOAuth(apiKey: "synthetic-key", clientSecret: "synthetic-secret") { request in
+            await recorder.append(request)
+            return Data(#"{"access_token":"synthetic-token","token_type":"Bearer","expires_in":86400,"refresh_token":"unused-synthetic-refresh","scope":"playback-control-all"}"#.utf8)
+        }
+        do {
+            _ = try await oauth.exchange(code: "synthetic-code", returnedState: "wrong", expectedState: "expected")
+            XCTFail("Mismatched state must fail")
+        } catch { XCTAssertTrue(safeMessage(error).contains("state did not match")) }
+        let before = await recorder.values
+        XCTAssertTrue(before.isEmpty, "No token request should be sent for a mismatched state")
+        let credentials = try await oauth.exchange(code: "synthetic-code", returnedState: "expected", expectedState: "expected")
+        XCTAssertEqual(credentials.token, "synthetic-token")
+        XCTAssertEqual(credentials.apiKey, "synthetic-key")
+        let requests = await recorder.values
+        XCTAssertEqual(requests.count, 1)
+        let request = try XCTUnwrap(requests.first)
+        XCTAssertEqual(request.httpMethod, "POST")
+        XCTAssertEqual(request.url?.absoluteString, "https://api.sonos.com/login/v3/oauth/access")
+        XCTAssertEqual(request.value(forHTTPHeaderField: "Content-Type"), "application/x-www-form-urlencoded;charset=utf-8")
+        XCTAssertEqual(request.value(forHTTPHeaderField: "Authorization"), "Basic " + Data("synthetic-key:synthetic-secret".utf8).base64EncodedString())
+        let body = String(decoding: try XCTUnwrap(request.httpBody), as: UTF8.self)
+        XCTAssertTrue(body.contains("grant_type=authorization_code"))
+        XCTAssertTrue(body.contains("code=synthetic-code"))
+        XCTAssertTrue(body.contains("redirect_uri=https%3A%2F%2Fnbeadman.github.io%2Fmultiroomkit%2Fsonos%2Fcallback%2F"))
+        XCTAssertFalse(body.contains("synthetic-secret"))
+    }
+
+    func testOAuthRejectsBadTokenResponseWithoutLeakingIt() async throws {
+        let oauth = try SonosOAuth(apiKey: "synthetic-key", clientSecret: "synthetic-secret") { _ in
+            Data(#"{"access_token":"PRIVATE_VALUE","token_type":"Other","expires_in":86400,"scope":"playback-control-all"}"#.utf8)
+        }
+        do {
+            _ = try await oauth.exchange(code: "synthetic-code", returnedState: "same", expectedState: "same")
+            XCTFail("Unsupported token type must fail")
+        } catch {
+            XCTAssertFalse(safeMessage(error).contains("PRIVATE_VALUE"))
+            XCTAssertTrue(safeMessage(error).contains("unsupported token"))
+        }
     }
 
     func testCloudMissingMetadataAndFailure() async throws {
