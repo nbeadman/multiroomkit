@@ -47,8 +47,9 @@ guarantee that future firmware will preserve this interface.
 
 ## Sonos Control API: interactive authorization
 
-Live cloud verification is pending. Synthetic OAuth and cloud tests are not
-evidence of a successful authorization or a live speaker query.
+Nick reported one successful live authorization and status query on 2026-10-08.
+Synthetic tests cover additional code paths, but neither result establishes
+complete parity with UPnP or the official Sonos app.
 
 1. Create a developer account through the [Sonos developer portal](https://developer.sonos.com/).
 2. Register a **control** integration and its redirect URI exactly as

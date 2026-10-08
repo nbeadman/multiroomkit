@@ -33,10 +33,15 @@ from the future public SDK until live results establish useful boundaries.
 - The normal display was shown to Nick privately for comparison. Household
   counts, playback states, metadata availability, room names, and media details
   are intentionally not reproduced here.
-- Live cloud verification is **not performed**. Synthetic responses verify
-  authorization URL construction, state matching, token exchange requests,
-  response parsing, grouping, and failure handling, but not Sonos acceptance
-  or live speaker status.
+- Nick reported a successful private live run of `cloud-status --json` on
+  2026-10-08. It completed Sonos authorization, the one-session code exchange,
+  and a read-only Sonos Control API status query. This is user-reported live
+  verification, not an independently reproduced run by Codex. The returned
+  snapshot stays private.
+- Synthetic responses also verify authorization URL construction, state
+  matching, token exchange requests, response parsing, grouping, and failure
+  handling. The live run does not establish parity with UPnP or cover every
+  playback and topology state.
 - No tokens, room names, media titles, household/device IDs, or network addresses
   are included in this report or committed fixtures. No playback or security
   configuration changes were made.
@@ -51,12 +56,11 @@ Sonos protections. Normal terminal/CI instructions retain standard SwiftPM use.
 - Compare displayed rooms and current titles against the official Sonos app.
 - Exercise paused media, radio, TV/line-in, unreachable coordinators, and topology
   changes on real hardware. These are not all established by one successful run.
-- Exercise the published HTTPS callback and local code exchange with a real,
-  user-authorized Sonos login, then compare cloud and UPnP snapshots of the
-  same system. Keep all resulting data private.
+- Compare cloud and UPnP snapshots of the same system, along with the official
+  Sonos app. Keep all resulting data private.
 - The prototype does not retain tokens or implement refresh. Each invocation
-  repeats the OAuth flow; assess a secure persistent design only after the
-  one-session flow has been verified.
+  repeats the OAuth flow; assess a secure persistent design before promoting
+  this experiment into a supported tool.
 - UPnP rows are physical topology members; cloud rows are logical players with
   reported device counts. Do not infer an error merely from different row counts.
 - Snapshots are sequential observations, not atomic views. Sources may omit
