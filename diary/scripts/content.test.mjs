@@ -98,6 +98,11 @@ Fixture entry.
       assert.ok(about.includes("Not affiliated with or endorsed by Sonos."));
       const notFound = await readFile(path.join(fixture, "_site/404.html"), "utf8");
       assert.match(notFound, /This page isn(?:'|&#39;)t here\./);
+      const callback = await readFile(path.join(fixture, "_site/sonos/callback/index.html"), "utf8");
+      assert.ok(callback.includes('name="referrer" content="no-referrer"'));
+      assert.ok(callback.includes("connect-src 'none'"));
+      assert.ok(callback.includes(`src="${prefix}assets/sonos-callback.js"`));
+      assert.ok(!callback.includes("client_secret"));
     } finally {
       await rm(fixture, { recursive: true, force: true });
     }
