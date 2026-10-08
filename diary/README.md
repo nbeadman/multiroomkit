@@ -84,4 +84,25 @@ Journal entries sort newest date first, then highest entry number first for entr
 - `site/_data/site.js`: site identity and deployment metadata.
 - `../.github/workflows/pages.yml`: build, checks, and publication.
 
-The site has no analytics, cookies, external fonts, or client-side JavaScript. Content is readable without scripting. MultiroomKit is an independent project and is not affiliated with Sonos.
+The diary has no analytics, cookies, external fonts, or client-side JavaScript. Its content is readable without scripting. The separate Sonos callback below requires JavaScript. MultiroomKit is an independent project and is not affiliated with Sonos.
+
+## Sonos OAuth redirect
+
+The standalone callback at `https://nbeadman.github.io/multiroomkit/sonos/callback/`
+is the redirect URI for the experimental Sonos Control API integration. It is
+the site's only JavaScript page. Sonos requires a publicly routable HTTPS
+redirect URI, and the URI in the authorization request must exactly match the
+one registered in the developer portal. The page removes the authorization
+response from the visible URL, displays its short-lived code and state locally,
+and makes no token-exchange or third-party requests. It does not save either
+value. Do not link directly to this page from the diary or submit a real code
+in a test URL, issue, PR, or chat.
+
+GitHub Pages will still receive the initial redirect URL containing the code;
+this static callback cannot prevent hosting-layer request logs or browser
+history from briefly seeing it. The page is suitable only for a personal
+prototype, not a production OAuth service. The client secret and token
+exchange must stay in a separate local or server-side process. Do not initiate
+Sonos authorization until that process is ready; codes expire and are
+single-use. No Sonos key, secret, token, or household data belongs in this
+repository.
