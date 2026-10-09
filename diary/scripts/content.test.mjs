@@ -37,6 +37,7 @@ description: Sorting fixture
 date: 2098-01-01
 entryNumber: "${number}"
 draft: false
+author: Fixture AI
 ---
 Fixture entry.
 `);
@@ -50,8 +51,9 @@ Fixture entry.
       const html = await readFile(path.join(fixture, "_site/index.html"), "utf8");
       assert.ok(html.includes("<strong>Homepage fixture.</strong>"));
       assert.ok(html.includes("<strong>Status fixture.</strong>"));
-      assert.ok(html.includes("<strong>OpenAI Codex</strong>"));
-      assert.ok(html.includes("with prompting by <strong>Nick Beadman</strong>"));
+      assert.ok(html.includes("AI assistants help write and build the project"));
+      assert.ok(html.includes("<strong>Nick Beadman's</strong> direction and review"));
+      assert.ok(html.includes("Each journal entry identifies its author"));
       assert.ok(html.includes("Human authored, not AI"));
       const notes = html.match(/<section class="principles human-notes wrap"[\s\S]*?<\/section>/)?.[0];
       assert.ok(notes, "Human-authored notes must have their own section");
@@ -61,7 +63,8 @@ Fixture entry.
       assert.ok(html.includes(">A reviewable, Markdown-driven diary<"));
       assert.ok(html.includes(">Making room for code<"));
       const layoutEntry = await readFile(path.join(fixture, "_site/journal/making-room-for-code/index.html"), "utf8");
-      assert.ok(layoutEntry.includes("Used GPT-6 Astra Light."));
+      assert.ok(layoutEntry.includes("Written by OpenAI Codex"));
+      assert.ok(layoutEntry.includes(">OpenAI GPT-6 Astra</a> Light."));
       assert.ok(layoutEntry.includes('class="entry-human-notes"'));
       assert.ok(layoutEntry.includes('href="https://github.com/nbeadman/multiroomkit/pull/3"'));
       assert.ok(!html.includes("/journal/content-without-the-layout/"));
@@ -90,6 +93,7 @@ Fixture entry.
         assert.ok(entry.indexOf(panel) < entry.indexOf('<aside class="article-note">'));
       }
       const entryWithoutNotes = await readFile(path.join(fixture, "_site/journal/a-earlier-fixture/index.html"), "utf8");
+      assert.ok(entryWithoutNotes.includes("Written by Fixture AI"));
       assert.ok(!entryWithoutNotes.includes('class="entry-human-notes"'));
       const about = await readFile(path.join(fixture, "_site/about/index.html"), "utf8");
       assert.ok(about.includes("<h2>Why build it?</h2>"));
@@ -103,6 +107,21 @@ Fixture entry.
       assert.ok(callback.includes("connect-src 'none'"));
       assert.ok(callback.includes(`src="${prefix}assets/sonos-callback.js"`));
       assert.ok(!callback.includes("client_secret"));
+      await writeFile(path.join(fixture, "site/journal/missing-author-fixture.md"), `---
+title: Missing author fixture
+date: 2099-01-02
+entryNumber: "98"
+draft: false
+---
+This entry must fail the build.
+`);
+      const missingAuthor = spawnSync(process.execPath, [cli], {
+        cwd: fixture,
+        encoding: "utf8",
+        env: { ...process.env, SITE_PATH_PREFIX: prefix },
+      });
+      assert.notEqual(missingAuthor.status, 0, "A published entry without an author must fail the build");
+      assert.match(missingAuthor.stdout + missingAuthor.stderr, /published journal entries require an explicit author/);
     } finally {
       await rm(fixture, { recursive: true, force: true });
     }

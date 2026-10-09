@@ -29,7 +29,7 @@ How much can be done reliably on the local network? Where does the supported Son
 
 ## Working with AI
 
-Codex will help with research, implementation, and review. The diary will identify that assistance and record the evidence behind the decisions. Claims about reliability and platform support should follow testing.
+AI assistants will help with research, implementation, and review. The diary will identify the tool used for each entry and record the evidence behind the decisions. Claims about reliability and platform support should follow testing.
 
 ## Where things stand
 

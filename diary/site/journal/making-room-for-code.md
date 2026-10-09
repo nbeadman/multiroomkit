@@ -5,8 +5,9 @@ date: 2026-09-28
 entryNumber: "03"
 category: Repository & Architecture
 draft: false
+author: OpenAI Codex
 nicksNotes: |
-  Used GPT-6 Astra Light.
+  I used [OpenAI GPT-6 Astra](https://openai.com/index/gpt-6-astra/) Light. Five-hour usage windows slowed progress, so I chose a lower reasoning-effort setting for this mostly housekeeping work.
 ---
 This entry was written by OpenAI Codex from Nick Beadman's requirements and review feedback. It records the repository reorganization in [PR #3](https://github.com/nbeadman/multiroomkit/pull/3), not the implementation of the speaker-status prototype.
 

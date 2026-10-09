@@ -5,8 +5,11 @@ date: 2026-10-08
 entryNumber: "04"
 category: Experiment
 draft: false
+author: OpenAI Codex
+nicksNotes: |
+  I used [OpenAI GPT-6 Sol](https://openai.com/index/introducing-gpt-6-sol-and-luna/) Medium for these prototypes, continuing to experiment with what each model can do. I did only a light PR review. I am generally unhappy with the Swift style and may add [SwiftLint](https://github.com/realm/SwiftLint) in a future entry. I was impressed by how quickly the callback page was set up to display the authorization code and state. An earlier version stored credentials in Keychain, which was reasonable but unnecessary for a prototype. I asked Codex to use hidden terminal prompts instead.
 ---
-This entry was written by OpenAI Codex from Nick Beadman's requirements and his report of a private live test. It covers the speaker-status prototype in [PR #4](https://github.com/nbeadman/multiroomkit/pull/4) and the OAuth callback delivered separately in [PR #6](https://github.com/nbeadman/multiroomkit/pull/6). Nick has not supplied human-authored notes for this entry.
+This entry was written by OpenAI Codex from Nick Beadman's requirements and his report of a private live test. It covers the speaker-status prototype in [PR #4](https://github.com/nbeadman/multiroomkit/pull/4) and the OAuth callback delivered separately in [PR #6](https://github.com/nbeadman/multiroomkit/pull/6).
 
 ## A small question before an SDK
 
