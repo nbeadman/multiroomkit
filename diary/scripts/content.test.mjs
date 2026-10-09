@@ -51,9 +51,9 @@ Fixture entry.
       const html = await readFile(path.join(fixture, "_site/index.html"), "utf8");
       assert.ok(html.includes("<strong>Homepage fixture.</strong>"));
       assert.ok(html.includes("<strong>Status fixture.</strong>"));
-      assert.ok(html.includes("AI assistants help write and build the project"));
-      assert.ok(html.includes("<strong>Nick Beadman's</strong> direction and review"));
-      assert.ok(html.includes("Each journal entry identifies its author"));
+      assert.ok(html.includes("All diary prose except <strong>Nick's Notes</strong> is drafted by AI assistants"));
+      assert.ok(html.includes("from <strong>Nick Beadman's</strong> prompts and reviewed by him"));
+      assert.ok(html.includes("Each entry identifies the assistant used"));
       assert.ok(html.includes("Human authored, not AI"));
       const notes = html.match(/<section class="principles human-notes wrap"[\s\S]*?<\/section>/)?.[0];
       assert.ok(notes, "Human-authored notes must have their own section");

@@ -1,7 +1,7 @@
 ---
 layout: home.njk
 permalink: /index.html
-description: Building MultiroomKit in public with AI assistance, directed and reviewed by Nick Beadman. Each journal entry identifies its author; Nick's Notes are human-authored.
+description: Building MultiroomKit in public. Diary prose except Nick's Notes is drafted by AI assistants from Nick Beadman's prompts and reviewed by him; each entry credits its assistant.
 eyebrow: The developer diary
 since: Since September 2026
 headline:
@@ -33,4 +33,4 @@ notes:
   heading: Nick's Notes
   subtitle: Human authored, not AI
 ---
-A record of the choices, experiments, and course corrections along the way. AI assistants help write and build the project under **Nick Beadman's** direction and review. Each journal entry identifies its author; **Nick's Notes** below are human-authored.
+A record of the choices, experiments, and course corrections along the way. All diary prose except **Nick's Notes** is drafted by AI assistants from **Nick Beadman's** prompts and reviewed by him. Each entry identifies the assistant used; **Nick's Notes** below are human-authored.

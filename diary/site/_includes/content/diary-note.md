@@ -1,3 +1,3 @@
 **About this diary**
 
-Written with AI assistance under Nick Beadman's direction and review. Each entry identifies its author and records the decisions, evidence, and remaining uncertainty alongside the implementation.
+All diary prose except Nick's Notes is drafted by AI assistants from Nick Beadman's prompts and reviewed by him. Each entry identifies the assistant used and records the decisions, evidence, and remaining uncertainty alongside the implementation.

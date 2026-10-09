@@ -29,7 +29,7 @@ How much can be done reliably on the local network? Where does the supported Son
 
 ## Working with AI
 
-AI assistants will help with research, implementation, and review. The diary will identify the tool used for each entry and record the evidence behind the decisions. Claims about reliability and platform support should follow testing.
+I use AI assistants for research and implementation. I prompt them to draft all diary prose except Nick's Notes, then review the result. Each entry identifies the assistant used and records the evidence behind the decisions. Claims about reliability and platform support should follow testing.
 
 ## Where things stand
 
