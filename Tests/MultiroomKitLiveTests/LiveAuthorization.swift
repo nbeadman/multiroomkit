@@ -4,34 +4,73 @@ import Security
 import MultiroomKit
 
 // Test-runner UI only. Credentials are neither arguments nor environment variables;
-// /dev/tty keeps private interaction separate from XCTest's captured output.
+// The foreground launcher preserves terminal input. Never redirect its output.
+enum TerminalInteractionError: Error, LocalizedError {
+    case unavailable, readFailed, endOfInput, emptyInput, inputTooLong, invalidEncoding
+
+    var errorDescription: String? {
+        switch self {
+        case .unavailable: "No interactive terminal is available. Run bash scripts/test-live.sh terminal-check from your terminal."
+        case .readFailed: "The test runner cannot read terminal input. Use bash scripts/test-live.sh instead of swift test for interactive live tests."
+        case .endOfInput: "Terminal input ended before a complete line was read."
+        case .emptyInput: "No input was entered."
+        case .inputTooLong: "Terminal input exceeds the length limit."
+        case .invalidEncoding: "Terminal input is not valid UTF-8."
+        }
+    }
+}
+
 enum PrivateTerminal {
     static func write(_ value: String) throws {
-        guard let terminal = FileHandle(forWritingAtPath: "/dev/tty") else { throw MultiroomError.authenticationFailed }
-        defer { try? terminal.close() }
-        try terminal.write(contentsOf: Data(value.utf8))
+        if let terminal = FileHandle(forWritingAtPath: "/dev/tty") {
+            defer { try? terminal.close() }
+            try terminal.write(contentsOf: Data(value.utf8))
+        } else if isatty(STDERR_FILENO) == 1 {
+            try FileHandle.standardError.write(contentsOf: Data(value.utf8))
+        } else {
+            throw TerminalInteractionError.unavailable
+        }
     }
 
     static func hidden(_ prompt: String) throws -> String {
-        let fd = open("/dev/tty", O_RDWR)
-        guard fd >= 0 else { throw MultiroomError.authenticationFailed }
-        defer { close(fd) }
+        // SwiftPM launchers can detach stdin or put XCTest outside the terminal's
+        // foreground process group. The direct launcher keeps inherited stdin usable.
+        let inherited = isatty(STDIN_FILENO) == 1
+        let fd = inherited ? STDIN_FILENO : open("/dev/tty", O_RDWR)
+        guard fd >= 0 else { throw TerminalInteractionError.unavailable }
+        defer { if !inherited { close(fd) } }
         var original = termios()
-        guard tcgetattr(fd, &original) == 0 else { throw MultiroomError.authenticationFailed }
+        guard tcgetattr(fd, &original) == 0 else { throw TerminalInteractionError.unavailable }
         var hidden = original
         hidden.c_lflag &= ~tcflag_t(ECHO)
-        guard tcsetattr(fd, TCSANOW, &hidden) == 0 else { throw MultiroomError.authenticationFailed }
+        // Discard queued command-paste newlines before displaying the prompt.
+        guard tcsetattr(fd, TCSAFLUSH, &hidden) == 0 else { throw TerminalInteractionError.unavailable }
         defer { _ = tcsetattr(fd, TCSANOW, &original); try? write("\n") }
         try write(prompt)
+        return try readLine {
+            var byte: UInt8 = 0
+            while true {
+                let count = Darwin.read(fd, &byte, 1)
+                if count == 1 { return byte }
+                if count == 0 { return nil }
+                if errno == EINTR { continue }
+                throw TerminalInteractionError.readFailed
+            }
+        }
+    }
+
+    // Independently test line handling without opening a terminal or using secrets.
+    static func readLine(nextByte: () throws -> UInt8?) throws -> String {
         var bytes: [UInt8] = []
-        var byte: UInt8 = 0
-        while read(fd, &byte, 1) == 1 {
+        while true {
+            guard let byte = try nextByte() else { throw TerminalInteractionError.endOfInput }
             if byte == 10 || byte == 13 { break }
-            guard bytes.count < 4096 else { throw MultiroomError.authenticationFailed }
+            guard bytes.count < 4096 else { throw TerminalInteractionError.inputTooLong }
             bytes.append(byte)
         }
-        guard !bytes.isEmpty else { throw MultiroomError.authenticationFailed }
-        return String(decoding: bytes, as: UTF8.self)
+        guard !bytes.isEmpty else { throw TerminalInteractionError.emptyInput }
+        guard let value = String(bytes: bytes, encoding: .utf8) else { throw TerminalInteractionError.invalidEncoding }
+        return value
     }
 }
 

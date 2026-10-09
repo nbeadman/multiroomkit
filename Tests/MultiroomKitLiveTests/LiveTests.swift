@@ -22,6 +22,12 @@ final class LiveTests: XCTestCase {
         XCTAssertTrue(!snapshot.isPartial, "Snapshot was incomplete; inspect privately before relying on it")
     }
 
+    func testTerminalInteraction() async throws {
+        try optIn("MULTIROOMKIT_LIVE_TERMINAL")
+        let value = try PrivateTerminal.hidden("Type terminal-check, then Return (input hidden; no credentials): ")
+        XCTAssertTrue(value == "terminal-check", "Terminal check did not receive the expected harmless test word")
+    }
+
     private func showPrivately(_ snapshots: [SystemSnapshot]) throws {
         guard ProcessInfo.processInfo.environment["MULTIROOMKIT_LIVE_SHOW_SNAPSHOT"] == "1" else { return }
         let encoder = JSONEncoder()

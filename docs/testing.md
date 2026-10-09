@@ -45,9 +45,28 @@ credentials in arguments, environment variables, source files, or test reports.
 Only non-secret opt-in flags belong in the environment.
 
 ```sh
-MULTIROOMKIT_LIVE_UPNP=1 swift test --filter 'LiveTests/testUPnP$'
-MULTIROOMKIT_LIVE_CLOUD=1 swift test --filter 'LiveTests/testControlAPI$'
+bash scripts/test-live.sh terminal-check
+bash scripts/test-live.sh upnp
+bash scripts/test-live.sh cloud
 ```
+
+Start with `terminal-check`: type the harmless word `terminal-check` when prompted.
+It verifies hidden interactive input without asking for credentials or contacting
+Sonos. Then run the desired live mode. The launcher builds a dedicated native
+XCTest bundle and executes its host directly in the foreground, preserving terminal
+input. It refuses CI, pipes, and redirected standard streams. Ordinary `swift test`
+continues to run the synthetic tests; its test launcher is not the supported path
+for interactive cloud authorization.
+
+A real cloud attempt exposed an immediate terminal-read failure before any Sonos
+request. The original helper misleadingly reported that as `authenticationFailed`.
+Terminal failures now have separate, sanitized diagnostics, and interrupted reads
+are retried. EOF cannot silently accept an incomplete credential. The foreground
+probe was verified with harmless input kept out of the output.
+
+The dedicated launcher currently uses SwiftPM's native backend, supported by the
+toolchains checked here but deprecated in Swift 6.4. This is a development-test
+workaround, not a permanent authorization architecture for supported products.
 
 UPnP requires the same LAN, UPnP enabled in the Sonos app, and local-network access
 for the terminal/test runner. Discovery can fail transiently; a failed run must not
@@ -85,8 +104,7 @@ with it does not establish an independent backend or prove the protocol the iPho
 app used. These comparisons check user-visible behavior and the SDK's interpretation.
 
 ```sh
-MULTIROOMKIT_LIVE_COMPARE=1 MULTIROOMKIT_LIVE_SHOW_SNAPSHOT=1 \
-  swift test --filter LiveTests.testPairedSnapshotsForManualAppComparison
+MULTIROOMKIT_LIVE_SHOW_SNAPSHOT=1 bash scripts/test-live.sh compare
 ```
 
 This authorizes cloud access first, then collects UPnP and cloud snapshots close
@@ -138,12 +156,9 @@ to contain real household details or force-add the private file to Git.
   identical source names or metadata. No assertion of absent metadata is supported.
 
 ```sh
-MULTIROOMKIT_LIVE_HOUSEHOLD_UPNP=1 \
-  swift test --filter 'LiveTests/testUPnPMatchesHousehold$'
-MULTIROOMKIT_LIVE_HOUSEHOLD_CLOUD=1 \
-  swift test --filter 'LiveTests/testControlAPIMatchesHousehold$'
-MULTIROOMKIT_LIVE_HOUSEHOLD_COMPARE=1 \
-  swift test --filter 'LiveTests/testBothTransportsMatchHousehold$'
+bash scripts/test-live.sh household-upnp
+bash scripts/test-live.sh household-cloud
+bash scripts/test-live.sh household-compare
 ```
 
 The cloud tests still require private terminal authorization. All three tests are
@@ -154,9 +169,8 @@ Six synthetic tests exercise the matcher without contacting speakers.
 
 Keep the system steady, compare UI and SDK observations close together, and
 refresh expectations from the UI after intentional changes. One passing snapshot
-does not validate state transitions. Cloud SDK and web-app comparison remain pending
-until authorization is completed; adding these tests is not evidence of a
-successful cloud household-specific run.
+does not validate state transitions. Passing evidence must come from a real run,
+not simply from adding these tests.
 
 ## SDK boundaries and validation record
 
@@ -178,8 +192,11 @@ not dependable discovery on every attempt. A subsequent household-specific UPnP
 test passed against room inventory, group membership, and playing/not-playing
 expectations independently observed in the iPhone Sonos app through Mirroring.
 No playback or grouping changes were made. Metadata and state transitions were
-not validated by that comparison. SDK cloud live testing against the web-app
-observation has **not yet been completed**. The earlier successful cloud prototype
-run is not evidence that this new SDK cloud implementation works live.
+not validated by that comparison. Nick subsequently reported that the foreground
+terminal probe and household-specific Control API test both passed against the
+private expectations independently observed in the Sonos web app. The supplied
+terminal-probe log confirms its pass; the cloud result is user-reported, without
+publishing private authorization or household output. These are read-only snapshot
+checks, not validation of metadata, state transitions, or ongoing reliability.
 
 Protocol reference: [Sonos Control API overview](https://docs.sonos.com/docs/control).

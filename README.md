@@ -27,8 +27,8 @@ simulator compilation is not evidence of real iOS or tvOS networking support.
 swift test
 ```
 
-Ordinary tests use invented data and loopback sockets only. Six live tests are
-skipped by default and refuse to run in CI. See the [testing guide](docs/testing.md)
+Ordinary tests use invented data and loopback sockets only. Live tests and the
+terminal probe are skipped by default and refuse to run in CI. See the [testing guide](docs/testing.md)
 for opt-in real-system tests and the manual Sonos-app comparison checklist.
 
 ## Speaker status prototype
