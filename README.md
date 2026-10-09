@@ -17,6 +17,13 @@ Only implemented components get package manifests and source directories. Planne
 platforms are not a claim of current support. Prototypes must not become a dependency
 of supported apps or tools.
 
+## Speaker status prototype
+
+See [setup and usage](prototypes/speaker-status/README.md) for `upnp-status` and
+`cloud-status`. Both are read-only Swift command-line tools for macOS. UPnP has
+been exercised on a real system; live cloud testing awaits developer-account
+setup. See the [verification record](docs/experiments/speaker-status.md).
+
 ## Diary development
 
 ```sh

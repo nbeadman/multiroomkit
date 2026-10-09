@@ -5,6 +5,7 @@ date: 2026-09-24
 entryNumber: "02"
 category: Experiment
 draft: true
+author: Name of AI assistant
 # Add only notes supplied by Nick; leave blank until he provides them.
 nicksNotes: ""
 ---
@@ -15,7 +16,7 @@ What were you trying to establish or deliver?
 
 ## AI assistance
 
-What did you ask Codex to do? Include a short edited excerpt only if useful.
+What did you ask the AI assistant to do? Include a short edited excerpt only if useful.
 
 ## What happened
 

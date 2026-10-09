@@ -5,8 +5,9 @@ date: 2026-09-25
 entryNumber: "02"
 category: Workflow & Publishing
 draft: false
+author: OpenAI Codex
 nicksNotes: |
-  I used GPT-6 Astra High. The work needed to be split across two five-hour usage windows. I requested a PR review workflow so that PRs can be used to address feedback in the future. Normal AI prompting would be quicker, but this method is similar to how I work with other engineers. The lack of separation between content and presentation was an obvious omission in the previous system. I would have addressed it then, had Codex not committed directly to `main`.
+  I used [OpenAI GPT-6 Astra](https://openai.com/index/gpt-6-astra/) High. The work needed to be split across two five-hour usage windows. I requested a PR review workflow so that PRs can be used to address feedback in the future. Normal AI prompting would be quicker, but this method is similar to how I work with other engineers. The lack of separation between content and presentation was an obvious omission in the previous system. I would have addressed it then, had Codex not committed directly to `main`.
 ---
 This entry was written by OpenAI Codex from Nick Beadman's prompts and review feedback. It covers two related changes: establishing a branch-and-PR workflow, then separating the diary's content from its presentation.
 

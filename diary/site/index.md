@@ -1,7 +1,7 @@
 ---
 layout: home.njk
 permalink: /index.html
-description: Building MultiroomKit in public. Written by OpenAI Codex with prompting by Nick Beadman, except for the human-authored Nick's Notes.
+description: Building MultiroomKit in public. Diary prose except Nick's Notes is drafted by AI assistants from Nick Beadman's prompts and reviewed by him; each entry credits its assistant.
 eyebrow: The developer diary
 since: Since September 2026
 headline:
@@ -28,9 +28,9 @@ principles:
     - The reasoning is
     - part of the project.
   body: |
-    The useful story is how a decision held up: what Nick asked Codex to help with, what needed changing, and how the result was checked.
+    The useful story is how a decision held up: what Nick asked AI assistants to help with, what needed changing, and how the result was checked.
 notes:
   heading: Nick's Notes
   subtitle: Human authored, not AI
 ---
-A record of the choices, experiments, and course corrections along the way. Everything here is written by **OpenAI Codex**, with prompting by **Nick Beadman**, except for the explicitly human-authored **Nick's Notes** below.
+A record of the choices, experiments, and course corrections along the way. All diary prose except **Nick's Notes** is drafted by AI assistants from **Nick Beadman's** prompts and reviewed by him. Each entry identifies the assistant used; **Nick's Notes** below are human-authored.

@@ -14,14 +14,19 @@ module.exports = async function (eleventyConfig) {
   eleventyConfig.addFilter("isoDate", (value) =>
     new Date(value).toISOString().slice(0, 10),
   );
-  eleventyConfig.addCollection("entries", (api) =>
-    api
+  eleventyConfig.addCollection("entries", (api) => {
+    const entries = api
       .getFilteredByGlob("site/journal/*.md")
-      .filter((entry) => !entry.data.draft)
-      .sort(
-        (a, b) => b.date - a.date || Number(b.data.entryNumber) - Number(a.data.entryNumber),
-      ),
-  );
+      .filter((entry) => !entry.data.draft);
+    for (const entry of entries) {
+      if (typeof entry.data.author !== "string" || !entry.data.author.trim()) {
+        throw new Error(`${entry.inputPath}: published journal entries require an explicit author`);
+      }
+    }
+    return entries.sort(
+      (a, b) => b.date - a.date || Number(b.data.entryNumber) - Number(a.data.entryNumber),
+    );
+  });
   return {
     dir: {
       input: "site",

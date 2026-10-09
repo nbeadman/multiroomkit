@@ -5,8 +5,9 @@ date: 2026-09-24
 entryNumber: "01"
 category: Foundations
 draft: false
+author: OpenAI Codex
 nicksNotes: |
-  I used GPT-6 Astra High. A usage reset was required, but I deemed it necessary because this was essentially the initial commit. Codex committed directly to `main`, which prompted the pull-request workflow changes.
+  I used [OpenAI GPT-6 Astra](https://openai.com/index/gpt-6-astra/) High. A usage reset was required, but I deemed it necessary because this was essentially the initial commit. Codex committed directly to `main`, which prompted the pull-request workflow changes.
 ---
 The first deliverable for MultiroomKit is this diary.
 
