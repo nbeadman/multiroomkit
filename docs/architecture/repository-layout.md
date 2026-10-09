@@ -4,13 +4,14 @@ The diary is self-contained under `diary/`, including its build configuration,
 lockfile, scripts, and authoring template. Its public URLs remain unchanged.
 
 Experiments live under `prototypes/<experiment>/` with their own Swift package,
-tests, and README. The first planned experiment compares read-only speaker status
+tests, and README. The first experiment implements read-only speaker status
 over UPnP (SSDP discovery, then SOAP) and the Sonos Control API.
 
-When the experiments establish a useful stable boundary, add the SDK as a root
-Swift package with `Sources/MultiroomKit/` and `Tests/MultiroomKitTests/`. This keeps
-the repository URL directly usable by Swift Package Manager. Do not create an
-empty SDK or promise an API before the experiment.
+The first SDK slice is a root Swift package with `Sources/MultiroomKit/` and
+separate unit, simulator integration, and opt-in live suites under `Tests/`.
+This keeps the repository URL directly usable by Swift Package Manager. Its
+read-only snapshot API is experimental, not a stable compatibility promise.
+The SDK has no dependency on prototype code. See [testing boundaries](../testing.md).
 
 Supported CLI and MCP products will have packages under `tools/` and depend on the
 SDK. Apple apps will live under `apps/Multiroom/`, with platform-specific targets

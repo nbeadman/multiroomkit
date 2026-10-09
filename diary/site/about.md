@@ -21,7 +21,7 @@ I’m a senior iOS developer. I want this work to show how I build and reason ab
 - **A command-line tool** for repeatable, scriptable control.
 - **An MCP server** that gives AI agents access to those same capabilities.
 
-These are project goals. The implementation and platform support have not yet been established.
+These are project goals. Read-only prototypes and a first experimental library slice exist; supported products and real Apple-platform networking coverage remain ahead.
 
 ## The first questions
 
@@ -33,6 +33,6 @@ I use AI assistants for research and implementation. I prompt them to draft all 
 
 ## Where things stand
 
-Earlier conversations explored naming, existing projects, local UPnP control, and the official Sonos APIs. The diary is the first deliverable. Next comes a scoped experiment and a recorded decision about the first control path.
+The diary and read-only status prototypes are in place. A first experimental Swift library now separates speaker topology from group playback, with synthetic integration tests and opt-in live checks. It is not yet a stable SDK, and simulator compilation does not establish real iOS or tvOS networking support.
 
 [Read the first entry →](/journal/starting-with-the-record/)

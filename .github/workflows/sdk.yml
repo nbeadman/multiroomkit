@@ -1,0 +1,26 @@
+name: Test Swift SDK
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  sdk:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v6
+      - name: Show compiler
+        run: swift --version
+      - name: Unit and loopback integration tests (live tests disabled)
+        env:
+          CI: "true"
+        run: swift test
+      - name: Compile SDK for iOS Simulator
+        run: swift build --triple arm64-apple-ios16.0-simulator --sdk "$(xcrun --sdk iphonesimulator --show-sdk-path)" --scratch-path .build-ios
+      - name: Compile SDK for tvOS Simulator
+        run: swift build --triple arm64-apple-tvos16.0-simulator --sdk "$(xcrun --sdk appletvsimulator --show-sdk-path)" --scratch-path .build-tvos

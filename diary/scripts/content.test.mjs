@@ -17,10 +17,12 @@ for (const prefix of ["/", "/multiroomkit/"]) {
       await symlink(path.join(repository, "node_modules"), path.join(fixture, "node_modules"), "dir");
       const homePath = path.join(fixture, "site/index.md");
       const source = await readFile(homePath, "utf8");
-      await writeFile(homePath, source.replace(
-        "The diary comes first.",
-        "**Status fixture.** [Project details](/about/?from=card#details). The diary comes first.",
-      ) + "\n**Homepage fixture.** [About](/about/) [External](https://example.com/path) [Anchor](#main)\n\n![Mark](/assets/favicon.svg)\n\nLiteral {{ untouched }}.\n");
+      const cardFixture = source.replace(
+        /^  body: \|\r?\n/m,
+        "$&    **Status fixture.** [Project details](/about/?from=card#details).\n",
+      );
+      assert.notEqual(cardFixture, source, "Expected a project-card Markdown body");
+      await writeFile(homePath, cardFixture + "\n**Homepage fixture.** [About](/about/) [External](https://example.com/path) [Anchor](#main)\n\n![Mark](/assets/favicon.svg)\n\nLiteral {{ untouched }}.\n");
       await writeFile(path.join(fixture, "site/journal/draft-fixture.md"), `---
 title: Hidden draft fixture
 date: 2099-01-01

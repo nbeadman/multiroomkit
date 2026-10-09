@@ -13,12 +13,12 @@ project:
   identifier: PROJECT / 001
   label: Currently
   heading:
-    - Laying the
-    - groundwork.
+    - Testing the
+    - first SDK slice.
   body: |
-    The diary comes first. The library, command-line tool, and MCP server are the work ahead.
-  stage: Foundations
-  focus: Scope & protocol research
+    Read-only prototypes now cover UPnP and the Sonos Control API. An experimental Swift library adds simulator tests and opt-in real-system checks; supported tools and apps remain ahead.
+  stage: Experiments
+  focus: SDK boundaries & testing
   linkLabel: Read the project brief
   link: /about/
 journalHeading: The journal
