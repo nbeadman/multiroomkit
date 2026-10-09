@@ -25,7 +25,9 @@ The suite exercises normal snapshots, state changes, missing metadata, partial f
 
 Live tests are skipped by default and disabled in CI. Cloud authorization uses hidden terminal prompts and an in-memory token for one run. Optional snapshot output stays on the private terminal, not in public reports. A separate checklist compares group membership, state, and available metadata with the official Sonos app. It deliberately avoids equating physical-device counts with logical-player counts or treating sequential snapshots as atomic.
 
-Local synthetic tests passed, and the library compiled for iOS and tvOS Simulator targets. A private SDK UPnP run succeeded after an initial discovery attempt found no usable responses. That supports one successful read-only run, not a claim of consistently reliable discovery. The new SDK cloud path and manual Sonos-app comparison still await live validation; the earlier prototype cloud result does not validate this implementation.
+Nick asked to use the Sonos web app as the visible cloud reference and the iPhone Sonos app through iPhone Mirroring for local observations. Household-specific tests compare the SDK with independently checked UI expectations kept in an ignored private file. They do not generate expectations from the SDK's own output, publish household details, or replace live observation with a simulator. A read-only household-specific UPnP run passed against the mirrored app's room inventory, group membership, and playing/not-playing state. That comparison did not validate metadata or state transitions. The web-app comparison still awaits SDK cloud authorization.
+
+Local synthetic tests passed, and the library compiled for iOS and tvOS Simulator targets. A private SDK UPnP run succeeded after an initial discovery attempt found no usable responses. That supports successful read-only operation, not a claim of consistently reliable discovery. The new SDK cloud path still awaits live validation; the earlier prototype cloud result does not validate this implementation.
 
 ## What comes next
 

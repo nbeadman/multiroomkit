@@ -53,4 +53,35 @@ final class LiveTests: XCTestCase {
         // Not a parity assertion: snapshots are non-atomic and player models differ.
         try showPrivately([local, remote])
     }
+
+    private func validateHousehold(_ snapshot: SystemSnapshot, against expectations: HouseholdExpectations) throws {
+        validate(snapshot)
+        let expected = try expectations.expected(for: snapshot.transport)
+        for message in expected.mismatches(in: snapshot) { XCTFail(message) }
+        try showPrivately([snapshot])
+    }
+
+    func testUPnPMatchesHousehold() async throws {
+        try optIn("MULTIROOMKIT_LIVE_HOUSEHOLD_UPNP")
+        let expectations = try HouseholdExpectations.load()
+        _ = try expectations.expected(for: .upnp)
+        try validateHousehold(await UPnPClient().snapshot(), against: expectations)
+    }
+
+    func testControlAPIMatchesHousehold() async throws {
+        try optIn("MULTIROOMKIT_LIVE_HOUSEHOLD_CLOUD")
+        let expectations = try HouseholdExpectations.load()
+        _ = try expectations.expected(for: .controlAPI)
+        try validateHousehold(await LiveAuthorization.client().snapshot(), against: expectations)
+    }
+
+    func testBothTransportsMatchHousehold() async throws {
+        try optIn("MULTIROOMKIT_LIVE_HOUSEHOLD_COMPARE")
+        let expectations = try HouseholdExpectations.load()
+        _ = try expectations.expected(for: .upnp)
+        _ = try expectations.expected(for: .controlAPI)
+        let cloud = try await LiveAuthorization.client()
+        try validateHousehold(await UPnPClient().snapshot(), against: expectations)
+        try validateHousehold(await cloud.snapshot(), against: expectations)
+    }
 }

@@ -45,8 +45,8 @@ credentials in arguments, environment variables, source files, or test reports.
 Only non-secret opt-in flags belong in the environment.
 
 ```sh
-MULTIROOMKIT_LIVE_UPNP=1 swift test --filter LiveTests.testUPnP
-MULTIROOMKIT_LIVE_CLOUD=1 swift test --filter LiveTests.testControlAPI
+MULTIROOMKIT_LIVE_UPNP=1 swift test --filter 'LiveTests/testUPnP$'
+MULTIROOMKIT_LIVE_CLOUD=1 swift test --filter 'LiveTests/testControlAPI$'
 ```
 
 UPnP requires the same LAN, UPnP enabled in the Sonos app, and local-network access
@@ -67,13 +67,22 @@ The current personal callback is the same published GitHub Pages callback used b
 the prototype. GitHub Pages receives the initial URL containing the short-lived
 code; this is an experimental flow, not a production authorization design.
 
-Live assertions check nonempty, internally consistent snapshots and reject partial
+Smoke assertions check nonempty, internally consistent snapshots and reject partial
 results. They do not prove the names, membership, or metadata match the Sonos app.
 Output is generic by default. An explicit private snapshot view is available for
 manual comparison; it includes identifiers and household data, so never attach it
 to GitHub, the diary, or a public test report.
 
 ## Manual comparison with the official Sonos app
+
+Use the [Sonos web app](https://play.sonos.com/) as the visible reference for the
+Control API, and the iPhone Sonos app through iPhone Mirroring as the visible
+reference for UPnP. UI-assisted observation is separate from automated Swift tests.
+Sign in yourself, and keep credentials and UI screenshots private. Mirroring must
+be set up and the Sonos app open before observation; it is not a headless CI tool.
+The web app's underlying API implementation has not been verified here; agreement
+with it does not establish an independent backend or prove the protocol the iPhone
+app used. These comparisons check user-visible behavior and the SDK's interpretation.
 
 ```sh
 MULTIROOMKIT_LIVE_COMPARE=1 MULTIROOMKIT_LIVE_SHOW_SNAPSHOT=1 \
@@ -99,6 +108,56 @@ The automated test validates each independently; **it does not assert parity**.
    and snapshots outside the repository. Disruptive offline/reboot tests should be
    separately planned, not performed as part of an ordinary test run.
 
+## Repeatable household-specific assertions
+
+The smoke tests above only validate internal consistency. To assert the actual
+room inventory, group membership, and playback state, use an independent UI
+observation as the expected result. Do not generate expectations from an SDK
+snapshot and call agreement a successful validation.
+
+The invented [example](live-household.example.json) shows the format. Put the
+actual expectations in `.local/live-household.json` in your checkout, which is
+ignored by Git. This is not a credential file. In a UI-assisted session, the
+assistant can prepare this private file from the displayed Sonos UI, then ask you
+to confirm it. You do not need to write JSON yourself. Never edit the public example
+to contain real household details or force-add the private file to Git.
+
+- `confirmedInSonosApp` must be `true` only after the observation is checked.
+- Each transport has its own `rooms` list and `groups`, each group containing
+  its room names and expected `playbackState` (`playing`, `paused`, `idle`, or
+  `buffering`, or `notPlaying`). Use `notPlaying` when the UI offers a Play button
+  but does not distinguish paused from stopped; it accepts SDK `paused` or `idle`,
+  never `unknown`, `buffering`, or `playing`. Every expected room must belong to exactly one expected group.
+- Names must be unique. Group names and IDs are not compared; group membership
+  identifies the corresponding group. UPnP invisible bonded members and satellites
+  are not counted as separate logical rooms.
+- `physicalDeviceCount` is optional. Omit it when the UI does not establish that
+  count; never substitute the number of displayed logical rooms.
+- Optional group `title`, `artist`, and `source` values assert exact transport
+  metadata. Omitted fields are not checked. Do not assume the two transports expose
+  identical source names or metadata. No assertion of absent metadata is supported.
+
+```sh
+MULTIROOMKIT_LIVE_HOUSEHOLD_UPNP=1 \
+  swift test --filter 'LiveTests/testUPnPMatchesHousehold$'
+MULTIROOMKIT_LIVE_HOUSEHOLD_CLOUD=1 \
+  swift test --filter 'LiveTests/testControlAPIMatchesHousehold$'
+MULTIROOMKIT_LIVE_HOUSEHOLD_COMPARE=1 \
+  swift test --filter 'LiveTests/testBothTransportsMatchHousehold$'
+```
+
+The cloud tests still require private terminal authorization. All three tests are
+read-only and opt-in, refuse CI, and fail if the expected-state file is missing,
+unconfirmed, or invalid. They never silently replace expectations to make a test
+pass. Failure messages exclude the actual and expected household values.
+Six synthetic tests exercise the matcher without contacting speakers.
+
+Keep the system steady, compare UI and SDK observations close together, and
+refresh expectations from the UI after intentional changes. One passing snapshot
+does not validate state transitions. Cloud SDK and web-app comparison remain pending
+until authorization is completed; adding these tests is not evidence of a
+successful cloud household-specific run.
+
 ## SDK boundaries and validation record
 
 Production cloud endpoints are fixed HTTPS Sonos URLs. The SDK accepts an async
@@ -115,8 +174,12 @@ There are no subscriptions, automatic retries, writes, or durable credentials ye
 On October 9, 2026, local synthetic tests passed and the SDK compiled for iOS and
 tvOS Simulator targets. A private SDK UPnP run passed after an initial discovery
 attempt found no usable responses. This establishes a successful read-only run,
-not dependable discovery on every attempt. SDK cloud live testing and the manual
-Sonos-app comparison have **not yet been completed**. The earlier successful cloud
-prototype run is not evidence that this new SDK cloud implementation works live.
+not dependable discovery on every attempt. A subsequent household-specific UPnP
+test passed against room inventory, group membership, and playing/not-playing
+expectations independently observed in the iPhone Sonos app through Mirroring.
+No playback or grouping changes were made. Metadata and state transitions were
+not validated by that comparison. SDK cloud live testing against the web-app
+observation has **not yet been completed**. The earlier successful cloud prototype
+run is not evidence that this new SDK cloud implementation works live.
 
 Protocol reference: [Sonos Control API overview](https://docs.sonos.com/docs/control).
