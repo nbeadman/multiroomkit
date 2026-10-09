@@ -119,7 +119,9 @@ final class SonosSimulator: @unchecked Sendable {
     }
 
     private func response(to request: CapturedRequest) -> Response {
-        let (scenario, household) = lock.withLock { (scenario, household) }
+        let (scenario, household): (Scenario, SimulatedHousehold) = lock.withLock {
+            (self.scenario, self.household)
+        }
         if scenario == .slow { return Response(body: Data("{}".utf8), delay: 2) }
         if scenario == .redirect {
             return Response(status: 302, headers: "Location: \(baseURL)/must-not-follow\r\n")
