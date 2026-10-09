@@ -1,0 +1,17 @@
+{
+  "confirmedInSonosApp": false,
+  "upnp": {
+    "rooms": ["Example Lounge", "Example Study"],
+    "physicalDeviceCount": 3,
+    "groups": [
+      { "rooms": ["Example Lounge", "Example Study"], "playbackState": "playing" }
+    ]
+  },
+  "controlAPI": {
+    "rooms": ["Example Lounge", "Example Study"],
+    "physicalDeviceCount": 3,
+    "groups": [
+      { "rooms": ["Example Lounge", "Example Study"], "playbackState": "playing" }
+    ]
+  }
+}

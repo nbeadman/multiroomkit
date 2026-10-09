@@ -17,6 +17,7 @@
 - Also build and check with `SITE_PATH_PREFIX=/multiroomkit/` to verify GitHub Pages project URLs.
 - For visual changes, inspect the rendered page at mobile and desktop sizes.
 - Never claim a test or deployment succeeded without observing the result.
+- For SDK changes, run root `swift test`. Unit and loopback simulator integration tests must not require credentials or a real household. Live tests must stay explicitly opt-in and disabled in CI. Never publish live snapshots or private terminal output.
 - For speaker-status changes, run `swift test --package-path prototypes/speaker-status` and both executable `--help` commands. CI uses synthetic fixtures only. Keep live testing opt-in and read-only; use `--summary` when reporting outcomes.
 - Live summaries still contain private household-derived counts and states. Do not publish those in documentation or PRs without explicit approval; publicly report only generic verification success/failure and implementation limitations.
 
